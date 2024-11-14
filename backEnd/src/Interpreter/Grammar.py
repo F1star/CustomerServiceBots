@@ -1,6 +1,12 @@
+from DataStructure import Root, Step, Expression
+
+
 class Grammar:
     def __init__(self, tokens):
         self.tokens = tokens
+        self.grmTree = Root()
+        self.step = Step()
+        self.expr = Expression()
         self.processTokens()
 
     def processTokens(self):
@@ -25,27 +31,79 @@ class Grammar:
                 print("Unknown token type:", token[0])
                 break
 
+        self.appendToTree()
+
+    def appendToTree(self):
+        self.grmTree.addStep(self.step.getStepID(), self.step.getStep())
+        self.step = Step()
+    
+    def appendExpr(self, token, num):
+        for i in range(num):
+            self.expr.addExpr(token[i])
+        self.step.addStep(self.expr.getExpr())
+        self.expr = Expression()
 
     def processStep(self, token):
-        pass
+        if self.grmTree.getMainStep() is None:
+            self.grmTree.setMainStep(token[1])
+        else:
+            self.appendToTree()
+
+        self.step.setStepID(token[1])
 
     def processSpeak(self, token):
-        pass
+        self.processExpression(token)
+        self.step.addStep(self.expr.getExpr())
+        self.expr = Expression()
 
     def processExpression(self, token):
-        pass
+        self.expr.addExpr(token[0])
+        for i in range(1, len(token)):
+            if token[i] == '+':
+                continue
+            elif token[i][0] == '$':
+                self.grmTree.addVarName(token[i][1:])
+                self.expr.addExpr(token[i][1:])
+            elif token[i][0] == '"' and token[i][-1] == '"':
+                self.expr.addExpr(token[i][1:-1])
+            else:
+                self.processError(token[i])
+
 
     def processListen(self, token):
-        pass
+        if len(token) != 2:
+            self.processError(token)
+        self.appendExpr(token, len(token))
+
 
     def processBranch(self, token):
-        pass
+        if len(token) != 3:
+            self.processError(token)
+        if self.grmTree.getBranch() == {}:
+            self.appendExpr(token, 1)
+        self.grmTree.addBranch(token[1][1:-1], token[2])  
+
 
     def processSilence(self, token):
-        pass
+        if len(token) != 2:
+            self.processError(token)
+        self.appendExpr(token, len(token))
 
     def processDefault(self, token):
-        pass
+        if len(token) != 2:
+            self.processError(token)
+        self.appendExpr(token, len(token))
 
     def processExit(self, token):
         pass
+        # 处理Exit逻辑
+        if len(token) > 1:
+            self.processError(token)
+
+    @staticmethod
+    def processError(token):
+        print(f"Error: Invalid token{token}")
+
+    def getGrmTree(self):
+        return self.grmTree
+

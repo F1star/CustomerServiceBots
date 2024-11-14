@@ -10,14 +10,14 @@ class Lexical:
         with open(self.fileName, 'r', encoding='utf-8') as f:
             for line in f.readlines():
                 # 逐行读取
-                line = line.strip() # 去掉行首空白
+                line = line.strip()  # 去掉行首空白
                 if line != '' and line[0] != '#':  # 跳过空行和注释行
                     self.parserLine(line)
-    
+
     def parserLine(self, line):
         wordList = []
-        words = line.split() 
-        for word in words: # 分割单词
+        words = line.split()
+        for word in words:  # 分割单词
             if word[0] == '#':
                 break
             wordList.append(word)
@@ -25,7 +25,7 @@ class Lexical:
 
     def getTokens(self):
         return self.tokens
-    
+
     def printTokens(self):
         for token in self.tokens:
             print(token)
