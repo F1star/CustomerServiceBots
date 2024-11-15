@@ -95,10 +95,9 @@ class Grammar:
         self.appendExpr(token, len(token))
 
     def processExit(self, token):
-        pass
-        # 处理Exit逻辑
         if len(token) > 1:
             self.processError(token)
+        self.appendExpr(token, len(token))
 
     @staticmethod
     def processError(token):

@@ -2,7 +2,6 @@ class Root:
     def __init__(self):
         self.stepTable = dict()
         self.mainStep = None
-        self.name = ''
         self.varName = []
         self.branchTable = dict()
 
@@ -68,3 +67,21 @@ class Expression:
     def getExpr(self):
         return self.expr
     
+
+class UserTable:
+    def __init__(self, varName):
+        self.userTable = dict()
+        self.varName = varName
+        self.setUser()
+
+    def setUser(self):
+        for var in self.varName:
+            info = self.getUserInfo(var)
+            self.userTable[var] = info
+
+    def getUserInfo(self, var):
+        name = input('please enter your' + var + ':')
+        return name
+    
+    def getTable(self):
+        return self.userTable
