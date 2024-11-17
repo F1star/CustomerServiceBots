@@ -5,7 +5,7 @@ from Interpreter import Interpreter
 
 def main():
     print("Lexical Analysis")
-    lex = Lexical('../Test/Example/test1.txt')
+    lex = Lexical('backEnd/src/Test/Example/test1.txt')
     lex.printTokens()
     grm = Grammar(lex.getTokens())
     print(grm.getGrmTree().getStep())

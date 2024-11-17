@@ -1,13 +1,13 @@
 Step welcome
     Speak $name + "您好，请问有什么可以帮您?"
-    Listen 5 # Listen for 5 seconds
+    Listen 10 # Listen for 10 seconds
     Branch "投诉" complainProc
     Branch "账单" billProc
     Silence silenceProc
     Default defaultProc
 Step complainProc
     Speak "您的意见是我们改进工作的动力，请问您还有什么补充?"
-    Listen 5 # Listen for 5 seconds
+    Listen 10 # Listen for 10 seconds
     Default thanks
 Step thanks
     Speak "感谢您的来电，再见"
@@ -17,8 +17,10 @@ Step billProc
     Exit
 Step silenceProc
     Speak "听不清，请您大声一点可以吗"
+    Listen 10 # Listen for 10 seconds
     Branch "投诉" complainProc
     Branch "账单" billProc
     Silence silenceProc
     Default defaultProc
 Step defaultProc
+    Exit

@@ -1,4 +1,4 @@
-from DataStructure import Root, Step, Expression
+from src.Interpreter.DataStructure import Root, Step, Expression
 
 
 class Grammar:
@@ -7,6 +7,7 @@ class Grammar:
         self.grmTree = Root()
         self.step = Step()
         self.expr = Expression()
+        self.isAppend = False  # Branch 是否已经追加到 step 中
         self.processTokens()
 
     def processTokens(self):
@@ -36,6 +37,7 @@ class Grammar:
     def appendToTree(self):
         self.grmTree.addStep(self.step.getStepID(), self.step.getStep())
         self.step = Step()
+        self.isAppend = False
     
     def appendExpr(self, token, num):
         for i in range(num):
@@ -79,8 +81,9 @@ class Grammar:
     def processBranch(self, token):
         if len(token) != 3:
             self.processError(token)
-        if self.grmTree.getBranch() == {}:
+        if self.isAppend == False:
             self.appendExpr(token, 1)
+            self.isAppend = True
         self.grmTree.addBranch(token[1][1:-1], token[2])  
 
 
