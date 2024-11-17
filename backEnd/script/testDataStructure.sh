@@ -1,1 +1,1 @@
-python -m src.Test.test_data_structure
+python -m src.Test.TestDataStructure

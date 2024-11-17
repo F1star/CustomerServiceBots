@@ -2,9 +2,9 @@ import unittest
 from src.Interpreter.Lexical import Lexical
 
 class TestLexical(unittest.TestCase):
-    def test_parser_file(self):
+    def testParserFile(self):
         # 创建一个临时的脚本文件
-        test_script = "test_script.txt"
+        test_script = "src/Test/testScript.txt"
         with open(test_script, "w", encoding="utf-8") as f:
             f.write("""
             # This is a comment

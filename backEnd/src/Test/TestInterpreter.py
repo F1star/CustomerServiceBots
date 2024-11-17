@@ -6,7 +6,7 @@ from src.Interpreter.Interpreter import Interpreter
 class TestInterpreter(unittest.TestCase):
     @patch('builtins.input', side_effect=["Charlie"])
     @patch('msvcrt.getch', side_effect=[b'1'])
-    def test_dispatch(self, mock_getch, mock_input):
+    def testDispatch(self, mock_getch, mock_input):
         # 构建语法树
         root = Root()
         root.setMainStep("MainStep")

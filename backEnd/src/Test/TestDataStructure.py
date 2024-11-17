@@ -3,7 +3,7 @@ from unittest.mock import patch
 from src.Interpreter.DataStructure import Root, Step, Expression, UserTable
 
 class TestDataStructure(unittest.TestCase):
-    def test_root(self):
+    def testRoot(self):
         root = Root()
         root.setName("TestRoot")
         root.setMainStep("MainStep")
@@ -19,7 +19,7 @@ class TestDataStructure(unittest.TestCase):
         self.assertIn("Branch1", root.getBranch())
         self.assertEqual(root.getBranch()["Branch1"], "Step2")
 
-    def test_step(self):
+    def testStep(self):
         step = Step()
         step.setStepID("Step1")
         step.addStep(["Speak", "Hello"])
@@ -30,7 +30,7 @@ class TestDataStructure(unittest.TestCase):
         self.assertEqual(step.getStep()[0], ["Speak", "Hello"])
         self.assertEqual(step.getStep()[1], ["Listen", "5"])
 
-    def test_expression(self):
+    def testExpression(self):
         expr = Expression()
         expr.addExpr("Speak")
         expr.addExpr("Hello, World!")
@@ -40,9 +40,9 @@ class TestDataStructure(unittest.TestCase):
         self.assertEqual(expr.getExpr()[1], "Hello, World!")
 
     @patch('builtins.input', side_effect=["Alice", "Bob"])
-    def test_user_table(self, mock_input):
-        user_table = UserTable(["firstName", "lastName"])
-        table = user_table.getTable()
+    def testUserTable(self, mock_input):
+        userTable = UserTable(["firstName", "lastName"])
+        table = userTable.getTable()
         
         self.assertEqual(table["firstName"], "Alice")
         self.assertEqual(table["lastName"], "Bob")

@@ -1,1 +1,1 @@
-python -m src.Test.test_grammar
+python -m src.Test.TestGrammar

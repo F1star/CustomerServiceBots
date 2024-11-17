@@ -1,1 +1,1 @@
-python -m src.Test.test_lexical
+python -m src.Test.TestLexical

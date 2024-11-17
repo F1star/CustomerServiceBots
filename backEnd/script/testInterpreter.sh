@@ -1,1 +1,1 @@
-python -m src.Test.test_interpreter
+python -m src.Test.TestInterpreter
