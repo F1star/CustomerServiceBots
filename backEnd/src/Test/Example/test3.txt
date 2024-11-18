@@ -1,0 +1,44 @@
+Step Start
+Speak "Welcome to the shopping system! " + "What would you like to buy? (options: apple, banana, orange)"
+Listen 10
+Branch "apple" AddApple
+Branch "banana" AddBanana
+Branch "orange" AddOrange
+Silence InvalidItem
+Default InvalidItem
+
+Step InvalidItem
+Speak "Invalid item selected. Please restart. (input any word to continue)"
+Listen 10
+Default Start
+
+Step AddApple
+Speak "Added an apple to your cart. (input any word to continue)"
+Listen 10
+Default AskContinue
+
+Step AddBanana
+Speak "Added a banana to your cart. (input any word to continue)"
+Listen 10
+Default AskContinue
+
+Step AddOrange
+Speak "Added an orange to your cart. (input any word to continue)"
+Listen 10
+Default AskContinue
+
+Step AskContinue
+Speak "Would you like to add more items? (yes/no)"
+Listen 10
+Branch "yes" Start
+Branch "no" Checkout
+Silence Timeout
+Default Timeout
+
+Step Timeout
+Speak "Session expired due to inactivity."
+Exit
+
+Step Checkout
+Speak "Thank you for shopping with us! "
+Exit

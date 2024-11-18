@@ -24,7 +24,7 @@ class TestLexical(unittest.TestCase):
         tokens = lexer.getTokens()
         expectedTokens = [
             ['Step', 'main'],
-            ['Speak', '"Hello', 'World"'],
+            ['Speak', '"Hello World"'],
             ['Listen', '5']
         ]
         self.assertEqual(tokens, expectedTokens)
@@ -39,7 +39,7 @@ class TestLexical(unittest.TestCase):
         lexer.printTokens()
         sys.stdout = sys.__stdout__
         output = capturedOutput.getvalue().strip().split('\n')
-        expectedOutput = ["['Step', 'main']", "['Speak', '\"Hello', 'World\"']", "['Listen', '5']"]
+        expectedOutput = ["['Step', 'main']", "['Speak', '\"Hello World\"']", "['Listen', '5']"]
         self.assertEqual(output, expectedOutput)
 
 if __name__ == '__main__':

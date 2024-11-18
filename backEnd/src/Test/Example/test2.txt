@@ -1,0 +1,64 @@
+Step Start
+Speak "Welcome! Are you looking for product recommendations? (Product/Goodbye)"
+Listen 10
+Branch "Product" ProductQuestion
+Branch "Goodbye" Goodbye
+Silence Timeout
+Default Timeout
+
+Step Timeout
+Speak "Session timed out due to inactivity. Please restart."
+Exit
+
+Step ProductQuestion
+Speak "Great! What category are you interested in? (options: electronics, clothing, books)"
+Listen 10
+Branch "electronics" RecommendElectronics
+Branch "clothing" RecommendClothing
+Branch "books" RecommendBooks
+Silence InvalidCategory
+Default InvalidCategory
+
+Step InvalidCategory
+Speak "Invalid category. Please choose from electronics, clothing, or books."
+Default ProductQuestion
+
+Step RecommendElectronics 
+Speak "Here are some popular electronics: Smartphone, Laptop, Headphones." + "Would you like more details? (Electronics/Goodbye)"
+Listen 10
+Branch "Electronics" ElectronicsDetails
+Branch "Goodbye" Goodbye
+Silence Timeout
+Default Timeout
+
+Step RecommendClothing
+Speak "Popular clothing items: Jacket, Jeans, T-Shirt." + "Would you like more details? (Clothing/Goodbye)"
+Listen 10
+Branch "Clothing" ClothingDetails
+Branch "Goodbye" Goodbye
+Silence Timeout
+Default Timeout
+
+Step RecommendBooks
+Speak "Popular books: '1984', 'To Kill a Mockingbird', 'The Great Gatsby'." + "Would you like more details? (Books/Goodbye)"
+Listen 10
+Branch "Books" BooksDetails
+Branch "Goodbye" Goodbye
+Silence Timeout
+Default Timeout
+
+Step ElectronicsDetails
+Speak "Smartphone: " + $SmartphonePrice + ", Laptop: " + $LaptopPrice + ", Headphones: " + $HeadphonesPrice + ". " + "Thank you for visiting. Have a great day!"
+Exit
+
+Step ClothingDetails
+Speak "Jacket: " + $JacketPrice + ", Jeans: " + $JeansPrice + ", T-Shirt: " + $T-ShirtPrice + ". " + "Thank you for visiting. Have a great day!"
+Exit
+
+Step BooksDetails
+Speak "'1984': " + $1984Price + ", 'To Kill a Mockingbird': " + $ToKillAMockingbirdPrice + ", 'The Great Gatsby': " + $TheGreatGatsbyPrice +". " + "Thank you for visiting. Have a great day!"
+Exit
+
+Step Goodbye
+Speak "Thank you for visiting. Have a great day!"
+Exit

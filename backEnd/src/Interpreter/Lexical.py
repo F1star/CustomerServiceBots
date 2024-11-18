@@ -1,3 +1,5 @@
+import re
+
 class Lexical:
     # 词法分析器
     def __init__(self, fileName):
@@ -16,9 +18,12 @@ class Lexical:
 
     def parserLine(self, line):
         wordList = []
-        words = line.split()
-        for word in words:  # 分割单词
-            if word[0] == '#':
+        # 使用正则表达式处理双引号中的内容
+        pattern = r'\"[^\"]*\"|\S+'
+        matches = re.findall(pattern, line)
+        
+        for word in matches:
+            if word.startswith('#'):  # 跳过注释
                 break
             wordList.append(word)
         self.tokens.append(wordList)
