@@ -1,36 +1,84 @@
+# testInterpreter.py
+
 import unittest
-from unittest.mock import patch, MagicMock
-from src.Interpreter.DataStructure import Root, UserTable
+import threading
+from src.Interpreter.DataStructure import Root, Step, Expression
 from src.Interpreter.Interpreter import Interpreter
+from src.Interpreter.Grammar import Grammar
 
 class TestInterpreter(unittest.TestCase):
-    @patch('builtins.input', side_effect=["Charlie"])
-    @patch('msvcrt.getch', side_effect=[b'1'])
-    def testDispatch(self, mock_getch, mock_input):
-        # 构建语法树
-        root = Root()
-        root.setMainStep("MainStep")
-        root.addVarName("username")
-        root.addStep("MainStep", [
-            ['Speak', 'Hello, ', 'username', '!'],
+    def setUp(self):
+        # Define tokens for the interpreter
+        tokens = [
+            ['Step', 'main'],
+            ['Speak', '"Hello World"'],
             ['Listen', '5'],
-            ['Branch']
-        ])
-        root.addBranch('投诉', 'ComplaintStep')
-        root.addStep('ComplaintStep', [
-            ['Speak', 'We are sorry for the inconvenience, ', 'username', '.'],
+            ['Branch', '"yes"', 'yes_step'],
+            ['Silence', 'no_response'],
+            ['Step', 'yes_step'],
+            ['Speak', '"You said yes"'],
+            ['Exit'],
+            ['Step', 'no_response'],
+            ['Speak', '"No response received"'],
             ['Exit']
-        ])
-        
-        # 初始化解释器
-        interpreter = Interpreter(root)
-        
-        with patch.object(interpreter, 'getInput', return_value=True):
-            interpreter.userInput = '投诉'
-            interpreter.dispatch()
-        
-        # 检查用户表是否正确获取
-        self.assertEqual(interpreter.userTable.getTable()['username'], 'Charlie')
+        ]
+        self.grammar = Grammar(tokens)
+        self.grmTree = self.grammar.getGrmTree()
+        self.interpreter = Interpreter(self.grmTree)
 
-if __name__ == "__main__":
+    def testInterpreterSpeak(self):
+        # Capture print output
+        from io import StringIO
+        import sys
+        capturedOutput = StringIO()
+        sys.stdout = capturedOutput
+
+        # Start interpreter in a separate thread
+        threading.Thread(target=self.interpreter.dispatch).start()
+
+        # Wait for output
+        import time
+        time.sleep(0.5)  # Adjusted sleep time if necessary
+
+        sys.stdout = sys.__stdout__
+        output = capturedOutput.getvalue().strip()
+        self.assertIn("Hello World", output)
+
+    def testInterpreterListenAndBranch(self):
+        # Provide user input
+        def provideInput():
+            import time
+            time.sleep(0.2)
+            self.interpreter.setUserInput("yes")
+
+        threading.Thread(target=provideInput).start()
+
+        # Capture print output
+        from io import StringIO
+        import sys
+        capturedOutput = StringIO()
+        sys.stdout = capturedOutput
+
+        self.interpreter.dispatch()
+
+        sys.stdout = sys.__stdout__
+        output = capturedOutput.getvalue().strip()
+        self.assertIn("Hello World", output)
+        self.assertIn("You said yes", output)
+
+    def testInterpreterSilence(self):
+        # Do not provide input to test silence branch
+        # Capture print output
+        from io import StringIO
+        import sys
+        capturedOutput = StringIO()
+        sys.stdout = capturedOutput
+
+        self.interpreter.dispatch()
+
+        sys.stdout = sys.__stdout__
+        output = capturedOutput.getvalue().strip()
+        self.assertIn("No response received", output)
+
+if __name__ == '__main__':
     unittest.main()

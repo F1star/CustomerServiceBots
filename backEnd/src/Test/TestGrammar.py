@@ -1,42 +1,58 @@
 import unittest
-from src.Interpreter.DataStructure import Root
 from src.Interpreter.Grammar import Grammar
 
 class TestGrammar(unittest.TestCase):
-    def testProcessTokens(self):
-        tokens = [
-            ['Step', 'MainStep'],
-            ['Speak', '"Hello, World!"'],
+    def setUp(self):
+        self.tokens = [
+            ['Step', 'main'],
+            ['Speak', '"Hello World"'],
             ['Listen', '5'],
-            ['Branch', '"Option1"', 'Step1'],
-            ['Silence', 'Step2'],
-            ['Default', 'Step3'],
             ['Exit']
         ]
-        grammar = Grammar(tokens)
+        self.grammar = Grammar(self.tokens)
+
+    def testGrammarTree(self):
+        grmTree = self.grammar.getGrmTree()
+        # Test the main step
+        self.assertEqual(grmTree.getMainStep(), 'main')
+        # Test the step content
+        steps = grmTree.getStep()
+        self.assertIn('main', steps)
+        # Remove .getStep() here
+        stepContent = steps['main']
+        expectedStepContent = [
+            ['Speak', 'Hello World'],
+            ['Listen', '5'],
+            ['Exit']
+        ]
+        self.assertEqual(stepContent, expectedStepContent)
+
+    def testVariableNames(self):
+        tokensWithVars = [
+            ['Step', 'main'],
+            ['Speak', '"Hello World"'],
+            ['Speak', '$name'],
+            ['Exit']
+        ]
+        grammar = Grammar(tokensWithVars)
         grmTree = grammar.getGrmTree()
-        
-        # Check main step
-        self.assertEqual(grmTree.getMainStep(), 'MainStep')
-        
-        # Check if steps are correctly added
-        self.assertIn('MainStep', grmTree.getStep())
-        mainStep = grmTree.getStep()['MainStep']
-        self.assertEqual(len(mainStep), 6)
-        self.assertEqual(mainStep[0], ['Speak', 'Hello, World!'])
-        self.assertEqual(mainStep[1], ['Listen', '5'])
-        self.assertEqual(mainStep[2], ['Branch'])
-        self.assertEqual(mainStep[3], ['Silence', 'Step2'])
-        self.assertEqual(mainStep[4], ['Default', 'Step3'])
-        self.assertEqual(mainStep[5], ['Exit'])
+        varNames = grmTree.getVarName()
+        self.assertIn('name', varNames)
 
-        # Check variable names (should be empty)
-        self.assertEqual(grmTree.getVarName(), [])
+    def testProcessError(self):
+        tokensWithError = [
+            ['Step'],
+            ['Speak', 'Hello']
+        ]
+        # Capture error output
+        from io import StringIO
+        import sys
+        capturedOutput = StringIO()
+        sys.stdout = capturedOutput
+        grammar = Grammar(tokensWithError)
+        sys.stdout = sys.__stdout__
+        output = capturedOutput.getvalue().strip()
+        self.assertIn("Error: Invalid token", output)
 
-        # Check branches
-        self.assertIn('Option1', grmTree.getBranch())
-        self.assertEqual(grmTree.getBranch()['Option1'], 'Step1')
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

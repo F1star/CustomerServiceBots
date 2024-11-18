@@ -1,51 +1,91 @@
+# testDataStructure.py
+
 import unittest
-from unittest.mock import patch
 from src.Interpreter.DataStructure import Root, Step, Expression, UserTable
 
-class TestDataStructure(unittest.TestCase):
-    def testRoot(self):
-        root = Root()
-        root.setName("TestRoot")
-        root.setMainStep("MainStep")
-        root.addStep("Step1", ["Speak", "Hello"])
-        root.addVarName("username")
-        root.addBranch("Branch1", "Step2")
-        
-        self.assertEqual(root.getName(), "TestRoot")
-        self.assertEqual(root.getMainStep(), "MainStep")
-        self.assertIn("Step1", root.getStep())
-        self.assertEqual(root.getStep()["Step1"], ["Speak", "Hello"])
-        self.assertIn("username", root.getVarName())
-        self.assertIn("Branch1", root.getBranch())
-        self.assertEqual(root.getBranch()["Branch1"], "Step2")
-
-    def testStep(self):
+class TestRoot(unittest.TestCase):
+    def setUp(self):
+        self.root = Root()
+    
+    def testInitialization(self):
+        self.assertEqual(self.root.stepTable, {})
+        self.assertIsNone(self.root.mainStep)
+        self.assertEqual(self.root.varName, [])
+        self.assertEqual(self.root.branchTable, {})
+    
+    def testGetStep(self):
+        self.assertEqual(self.root.getStep(), {})
+    
+    def testSetAndGetMainStep(self):
+        self.root.setMainStep('main')
+        self.assertEqual(self.root.getMainStep(), 'main')
+    
+    def testAddStep(self):
         step = Step()
-        step.setStepID("Step1")
-        step.addStep(["Speak", "Hello"])
-        step.addStep(["Listen", "5"])
-        
-        self.assertEqual(step.getStepID(), "Step1")
-        self.assertEqual(len(step.getStep()), 2)
-        self.assertEqual(step.getStep()[0], ["Speak", "Hello"])
-        self.assertEqual(step.getStep()[1], ["Listen", "5"])
+        self.root.addStep('step1', step)
+        self.assertIn('step1', self.root.getStep())
+        self.assertEqual(self.root.getStep()['step1'], step)
+    
+    def testAddVarName(self):
+        self.root.addVarName('var1')
+        self.assertIn('var1', self.root.getVarName())
+        self.root.addVarName('var1')  # Should not duplicate
+        self.assertEqual(len(self.root.getVarName()), 1)
+    
+    def testAddBranch(self):
+        branch = 'branch_content'
+        self.root.addBranch('branch1', branch)
+        self.assertIn('branch1', self.root.getBranch())
+        self.assertEqual(self.root.getBranch()['branch1'], branch)
 
-    def testExpression(self):
-        expr = Expression()
-        expr.addExpr("Speak")
-        expr.addExpr("Hello, World!")
-        
-        self.assertEqual(len(expr.getExpr()), 2)
-        self.assertEqual(expr.getExpr()[0], "Speak")
-        self.assertEqual(expr.getExpr()[1], "Hello, World!")
+class TestStep(unittest.TestCase):
+    def setUp(self):
+        self.step = Step()
+    
+    def testInitialization(self):
+        self.assertIsNone(self.step.stepID)
+        self.assertEqual(self.step.step, [])
+    
+    def testSetAndGetStepID(self):
+        self.step.setStepID('step1')
+        self.assertEqual(self.step.getStepID(), 'step1')
+    
+    def testAddStep(self):
+        expr = 'expression'
+        self.step.addStep(expr)
+        self.assertIn(expr, self.step.getStep())
 
-    @patch('builtins.input', side_effect=["Alice", "Bob"])
-    def testUserTable(self, mock_input):
-        userTable = UserTable(["firstName", "lastName"])
-        table = userTable.getTable()
-        
-        self.assertEqual(table["firstName"], "Alice")
-        self.assertEqual(table["lastName"], "Bob")
+class TestExpression(unittest.TestCase):
+    def setUp(self):
+        self.expr = Expression()
+    
+    def testInitialization(self):
+        self.assertEqual(self.expr.expr, [])
+    
+    def testAddExpr(self):
+        self.expr.addExpr('expr1')
+        self.assertIn('expr1', self.expr.getExpr())
 
-if __name__ == "__main__":
+class TestUserTable(unittest.TestCase):
+    def setUp(self):
+        self.userTable = UserTable(['var1', 'var2'])
+    
+    def testInitialization(self):
+        self.assertEqual(self.userTable.userTable, {})
+        self.assertEqual(self.userTable.varName, ['var1', 'var2'])
+    
+    def testSetName(self):
+        self.userTable.setName('username')
+        self.assertEqual(self.userTable.getTable()['name'], 'username')
+    
+    def testSetUser(self):
+        self.userTable.setUser('age', 30)
+        self.assertEqual(self.userTable.getTable()['age'], 30)
+    
+    def testGetTable(self):
+        self.userTable.setUser('key', 'value')
+        table = self.userTable.getTable()
+        self.assertEqual(table['key'], 'value')
+
+if __name__ == '__main__':
     unittest.main()

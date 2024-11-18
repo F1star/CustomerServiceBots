@@ -46,6 +46,9 @@ class Grammar:
         self.expr = Expression()
 
     def processStep(self, token):
+        if len(token) < 2:
+            self.processError(token)
+            return
         if self.grmTree.getMainStep() is None:
             self.grmTree.setMainStep(token[1])
         else:

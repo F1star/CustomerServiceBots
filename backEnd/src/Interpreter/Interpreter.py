@@ -46,13 +46,10 @@ class Interpreter:
 
             for state in self.curStep:
                 if state[0] == 'Speak':
-                    print(1)
                     self.doSpeak(state)
                 elif state[0] == 'Listen':
-                    print(2)
                     isInTime = self.doListen(state)
                 elif state[0] == 'Branch':
-                    print(3)
                     if isInTime:
                         keyList = list(self.tree.getBranch().keys())
                         isBreak = False
@@ -68,18 +65,15 @@ class Interpreter:
                     else:
                         continue
                 elif state[0] == 'Silence':
-                    print(4)
                     if flag:
                         flag = False
                         continue
                     stepName = state[1]
                     break
                 elif state[0] == 'Default':
-                    print(5)
                     stepName = state[1]
                     break
                 elif state[0] == 'Exit':
-                    print(6)
                     return
 
     def doSpeak(self, state):

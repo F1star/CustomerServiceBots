@@ -43,6 +43,7 @@ def register():
 
     return jsonify({'message': '注册成功'}), 200
 
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
@@ -121,10 +122,10 @@ def repeatChat():
 
     result = interpreter.getLatestResult()
     if result:
-        print(result)
         return jsonify({'message': result}), 200
     else:
-        return jsonify({'message': '没有新消息'}), 204
+        return jsonify({'message': '没有新消息'}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
