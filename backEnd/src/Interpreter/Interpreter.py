@@ -11,9 +11,9 @@ class Interpreter:
         self.mainStep = tree.getMainStep()  # 主步骤
         self.curStep = None  # 当前步骤
         self.userInput = None  # 用户输入
-        self.input_event = threading.Event()  # 线程事件，用于等待输入
-        self.result_lock = threading.Lock()  # 线程锁，确保对latest_result的线程安全访问
-        self.latest_result = None  # 最新结果缓存
+        self.inputEvent = threading.Event()  # 线程事件，用于等待输入
+        self.resultLock = threading.Lock()  # 线程锁，确保对latest_result的线程安全访问
+        self.latestResult = None  # 最新结果缓存
 
     def setName(self, name):
         """设置用户名称"""
@@ -30,13 +30,13 @@ class Interpreter:
     def setUserInput(self, userInput):
         """设置用户输入并触发事件"""
         self.userInput = userInput
-        self.input_event.set()  # 设置事件，表示用户输入已准备好
+        self.inputEvent.set()  # 设置事件，表示用户输入已准备好
 
     def getLatestResult(self):
         """获取并清除最新结果"""
-        with self.result_lock:
-            result = self.latest_result
-            self.latest_result = None  # 读取后清空最新结果
+        with self.resultLock:
+            result = self.latestResult
+            self.latestResult = None  # 读取后清空最新结果
             return result
 
     def dispatch(self):
@@ -95,8 +95,8 @@ class Interpreter:
             else:
                 expression += state[i]  # 如果不是变量，直接拼接
         print(expression)  # 输出表达式
-        with self.result_lock:
-            self.latest_result = expression  # 保存最新结果
+        with self.resultLock:
+            self.latestResult = expression  # 保存最新结果
         return
 
     def doListen(self, state):
@@ -104,7 +104,7 @@ class Interpreter:
         执行监听操作，等待用户输入。
         """
         self.userInput = None
-        self.input_event.clear()  # 清除输入事件标志，等待用户输入
+        self.inputEvent.clear()  # 清除输入事件标志，等待用户输入
         isInTime = self.getInput(int(state[1]))  # 等待输入，超时后返回
         return isInTime
 
@@ -112,8 +112,8 @@ class Interpreter:
         """
         等待用户输入，超时则返回False。
         """
-        is_set = self.input_event.wait(timeout)  # 等待用户输入事件触发
-        if is_set:
+        isSet = self.inputEvent.wait(timeout)  # 等待用户输入事件触发
+        if isSet:
             print(f"用户输入：{self.userInput}")
             return True  # 用户输入有效
         else:
