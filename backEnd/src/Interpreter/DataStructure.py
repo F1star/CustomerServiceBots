@@ -72,16 +72,12 @@ class UserTable:
     def __init__(self, varName):
         self.userTable = dict()
         self.varName = varName
-        self.setUser()
 
-    def setUser(self):
-        for var in self.varName:
-            info = self.getUserInfo(var)
-            self.userTable[var] = info
+    def setName(self, name):
+        self.userTable['name'] = name
 
-    def getUserInfo(self, var):
-        name = input('please enter your' + var + ':')
-        return name
-    
+    def setUser(self, infoName, userInfo):
+        self.userTable[infoName] = userInfo
+
     def getTable(self):
         return self.userTable
