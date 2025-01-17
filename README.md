@@ -1,3 +1,7 @@
+# 北京邮电大学计算机学院程序设计实践大作业 - 基于领域特定脚本语言的客服机器人的设计与实现（DSL）
+
+## 如果能帮助到您的话，请给我点个Star⭐吧！😄
+
 # CustomerServiceBots 项目文档
 
 ## 项目名称
@@ -51,6 +55,43 @@
    - 一个流程中可以出现 0 个或多个 `Branch` 语句。
    - 若一个流程是 `Step -- Speak -- (Listen) -- Default` 结构，则 Default 流程必须是 `Step -- Exit` 结构。
 
+## 运行方法
+
+### 1. 安装依赖
+
+确保已经安装了以下依赖：
+
+```
+cd frontEnd
+npm install
+cd..
+
+cd backEnd
+pip install -r requirements.txt
+cd..
+```
+
+### 2. 启动后端服务
+
+在`backEnd`目录下运行以下命令启动后端服务：
+
+```
+cd backEnd
+python app.py
+```
+
+### 3. 启动前端服务
+
+在`frontEnd`目录下运行以下命令启动前端服务：
+
+```
+cd frontEnd
+npm run dev
+```
+
+### 4. 访问应用
+
+打开浏览器，访问`http://localhost:5173`即可使用应用。
 
 ## 代码风格
 
